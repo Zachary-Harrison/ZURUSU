@@ -1,0 +1,24 @@
+# Java
+DataExtractors/Java-DataExtractor/target/
+DataExtractors/Java-DataExtractor/*.class
+DataExtractors/Java-DataExtractor/*.jar
+DataExtractors/Java-DataExtractor/*.war
+DataExtractors/Java-DataExtractor/*.ear
+DataExtractors/Java-DataExtractor/.settings/
+DataExtractors/Java-DataExtractor/.classpath
+DataExtractors/Java-DataExtractor/.project
+DataExtractors/Java-DataExtractor/.idea/
+
+# Python
+DataExtractors/Python-DataExtractor/__pycache__/
+DataExtractors/Python-DataExtractor/*.py[cod]
+DataExtractors/Python-DataExtractor/*$py.class
+DataExtractors/Python-DataExtractor/.python-version
+DataExtractors/Python-DataExtractor/venv/
+DataExtractors/Python-DataExtractor/.idea/
+
+# Ignore input/output pages
+*.json
+*.csv
+**/output/
+**/pages/
