@@ -62,7 +62,7 @@ public class Main {
             extractor.mergeFiles();
 //            extractor.convertToCSV("CPU_Usage-NORMAL.csv");
 //            extractor.convertToCSV("CPU_Usage-OVERALL_ATTACK.csv", attackPeriods);
-            extractor.convertToCSV("CPU_Usage-OVERALL_LIMITED_ATTACK.csv");
+            extractor.convertToCSV("CPU_Usage-OVERALL_LIMITED_ATTACK.csv", attackPeriods);
         }
         catch (Exception e) {
             System.err.println(e.toString());
