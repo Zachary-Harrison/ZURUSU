@@ -25,12 +25,12 @@ const CURRENCIES = ['EUR', 'USD', 'JPY', 'GBP', 'TRY', 'CAD'];
 //   { start: "2023-11-12T18:00:00Z", end: "2023-11-12T18:59:00Z", task: checkout },
 // ];
 const ATTACKS = [ 
-    { start: "2023-11-13T23:00:00Z", end: "2023-11-14T00:59:00Z", task: index },
-    { start: "2023-11-14T02:00:00Z", end: "2023-11-14T02:59:00Z", task: viewCart },
-    { start: "2023-11-14T05:00:00Z", end: "2023-11-14T05:59:00Z", task: setCurrency },
-    { start: "2023-11-14T08:00:00Z", end: "2023-11-14T08:59:00Z", task: browseProduct },
-    { start: "2023-11-14T11:00:00Z", end: "2023-11-14T11:59:00Z", task: addToCart },
-    { start: "2023-11-14T14:00:00Z", end: "2023-11-14T14:59:00Z", task: checkout },
+    { start: "2023-12-05T06:00:00Z", end: "2023-12-05T06:59:00Z", task: index },
+    { start: "2023-12-05T09:00:00Z", end: "2023-12-05T09:59:00Z", task: viewCart },
+    { start: "2023-12-05T12:00:00Z", end: "2023-12-05T12:59:00Z", task: setCurrency },
+    { start: "2023-12-05T15:00:00Z", end: "2023-12-05T15:59:00Z", task: browseProduct },
+    { start: "2023-12-05T18:00:00Z", end: "2023-12-05T18:59:00Z", task: addToCart },
+    { start: "2023-12-05T21:00:00Z", end: "2023-12-05T21:59:00Z", task: checkout },
   ];
 
 // ==================================
