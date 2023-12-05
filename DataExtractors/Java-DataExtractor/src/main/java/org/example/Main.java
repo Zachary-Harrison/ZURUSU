@@ -55,8 +55,9 @@ public class Main {
 
         DataExtractor extractor = new DataExtractor("pages", "output");
         try{
-//            extractor.createFiles(interval, aggregation, filter);
-//            extractor.mergeFiles();
+            extractor.createFiles(interval, aggregation, filter);
+            extractor.mergeFiles();
+//            extractor.convertToCSV("CPU_Usage-OVERALL_ATTACK.csv", attackPeriods);
             extractor.convertToCSV("CPU_Usage-NORMAL.csv");
         }
         catch (Exception e) {

@@ -1,15 +1,12 @@
 package org.example;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.monitoring.v3.MetricServiceClient;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.google.monitoring.v3.Aggregation;
 import com.google.monitoring.v3.ListTimeSeriesRequest;
 import com.google.monitoring.v3.TimeInterval;
@@ -20,15 +17,19 @@ import org.apache.commons.csv.CSVPrinter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.lang.reflect.Type;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.Instant;
 import java.util.*;
 
 public class DataExtractor {
-   private static final String PROJECT_ID = "[PROJECT_ID]";
+//    private static final String PROJECT_ID = "[PROJECT_ID]";
+    private static final String PROJECT_ID = "zurusu-500420";
     private static final String MERGED_FILENAME = "mergedResponse.json";
     private final String[] fieldnames = {"timestamp", "adservice","cartservice","checkoutservice","currencyservice","emailservice","frontend","paymentservice","productcatalogservice","recommendationservice","shippingservice", "label"};
     private String inputDirectory;
@@ -127,61 +128,6 @@ public class DataExtractor {
         }
     }
 
-    private String extractPodName(JsonParser parser) throws IOException {
-        String pod_name = null;
-        parser.nextToken(); // move to the start of the object
-        while (parser.nextToken() != JsonToken.END_OBJECT) {
-            if ("labels_".equals(parser.getCurrentName())) {
-                parser.nextToken(); // move to the start of the object
-                while (parser.nextToken() != JsonToken.END_OBJECT) {
-                    if ("mapData".equals(parser.getCurrentName())) {
-                        parser.nextToken(); // move to the start of the object
-                        while (parser.nextToken() != JsonToken.END_OBJECT) {
-                            if ("pod_name".equals(parser.getCurrentName())) {
-                                parser.nextToken(); // move to the value
-                                pod_name = parser.getText();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return pod_name;
-    }
-
-    private Map.Entry<String, Double> extractPoint(JsonParser parser) throws IOException {
-        String seconds = null;
-        double value = 0;
-        parser.nextToken(); // move to the start of the array
-        while (parser.nextToken() != JsonToken.END_ARRAY) {
-            while (parser.nextToken() != JsonToken.END_OBJECT) {
-                if ("interval_".equals(parser.getCurrentName())) {
-                    parser.nextToken(); // move to the start of the object
-                    while (parser.nextToken() != JsonToken.END_OBJECT) {
-                        if ("startTime_".equals(parser.getCurrentName())) {
-                            parser.nextToken(); // move to the start of the object
-                            while (parser.nextToken() != JsonToken.END_OBJECT) {
-                                if ("seconds_".equals(parser.getCurrentName())) {
-                                    parser.nextToken(); // move to the value
-                                    seconds = parser.getText();
-                                }
-                            }
-                        }
-                    }
-                } else if ("value_".equals(parser.getCurrentName())) {
-                    parser.nextToken(); // move to the start of the object
-                    while (parser.nextToken() != JsonToken.END_OBJECT) {
-                        if ("value_".equals(parser.getCurrentName())) {
-                            parser.nextToken(); // move to the value
-                            value = parser.getDoubleValue();
-                        }
-                    }
-                }
-            }
-        }
-        return seconds != null ? new AbstractMap.SimpleEntry<>(seconds, value) : null;
-    }
-
     public void convertToCSV(String outputFileName, List<String[]> attackPeriods) throws IOException {
         System.out.println("converting files...");
         if (!outputFileName.endsWith(".csv")) {
@@ -191,29 +137,46 @@ public class DataExtractor {
         Path outputDirPath = Paths.get(this.outputDirectory);
         Files.createDirectories(outputDirPath);  // create the directory if it does not exist
 
-
-        JsonFactory factory = new JsonFactory();
         Map<Long, Map<String, Double>> dataDict = new TreeMap<>();
-        try (Reader fileReader = Files.newBufferedReader(Paths.get(this.inputDirectory, MERGED_FILENAME));
-             JsonParser parser = factory.createParser(fileReader)) {
-            while (parser.nextToken() != JsonToken.END_ARRAY) {
-                String field = null;
-                while (parser.nextToken() != JsonToken.END_OBJECT) {
-                    String name = parser.getCurrentName();
-                    if ("resource_".equals(name)) {
-                        String pod_name = extractPodName(parser);
-                        field = this.getField(pod_name);
-                    } else if ("points_".equals(name)) {
-                        Map.Entry<String, Double> point = extractPoint(parser);
-                        if (point != null && field != null) {
-                            long posixTime = Instant.ofEpochSecond(Long.parseLong(point.getKey())).getEpochSecond();
-                            dataDict.computeIfAbsent(posixTime, k -> new HashMap<>()).put(field, point.getValue());
-                        }
-                    }
+        String jsonContent = new String(Files.readAllBytes(Paths.get(this.inputDirectory, MERGED_FILENAME)));
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<JsonElement>>(){}.getType();
+        List<JsonElement> list = gson.fromJson(jsonContent, type);
+
+        for (JsonElement element : list) {
+            JsonObject map = element.getAsJsonObject();
+
+            String pod_name = map
+                    .getAsJsonObject("resource_")
+                    .getAsJsonObject("labels_")
+                    .getAsJsonObject("mapData")
+                    .get("pod_name").getAsString();
+            String field = this.getField(pod_name);
+
+            JsonArray pointsArray = map.getAsJsonArray("points_");
+            for (JsonElement pointElement : pointsArray) {
+                JsonObject pointObject = pointElement.getAsJsonObject();
+
+                String seconds = pointObject
+                        .getAsJsonObject("interval_")
+                        .getAsJsonObject("endTime_")
+                        .get("seconds_").getAsString();
+
+                Double value = pointObject
+                        .getAsJsonObject("value_")
+                        .get("value_").getAsDouble();
+
+                // Add the extracted data to dataDict
+                if (field != null && seconds != null && value != null) {
+                    Long key = Long.parseLong(seconds);
+                    Map<String, Double> innerMap = dataDict.computeIfAbsent(key, k -> new HashMap<>());
+                    innerMap.put(field, value);
                 }
             }
         }
-                            
+
+        DecimalFormat df = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+        df.setMaximumFractionDigits(340); // 340 = DecimalFormat.DOUBLE_FRACTION_DIGITS
 
         try (CSVPrinter printer = new CSVPrinter(Files.newBufferedWriter(
                 Paths.get(this.outputDirectory, outputFileName)),
@@ -226,7 +189,9 @@ public class DataExtractor {
                         record.add(String.valueOf(entry.getKey()));
                     } else {
                         Double value = entry.getValue().get(fieldname);
-                        record.add(value != null ? String.valueOf(value) : "");
+                        if (value != null) {
+                            record.add(df.format(value));
+                        }
                     }
                 }
                 record.add(String.valueOf(this.getLabel(attackPeriods, entry.getKey())));
