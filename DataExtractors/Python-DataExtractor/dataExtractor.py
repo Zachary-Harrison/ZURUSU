@@ -11,6 +11,7 @@ class DataExtractor:
         self.inputDirectory = inputDirectory
         self.outputDirectory = outputDirectory
         self.fieldnames = ["timestamp", "adservice","cartservice","checkoutservice","currencyservice","emailservice","frontend","paymentservice","productcatalogservice","recommendationservice","shippingservice", "label"]
+        self.PROJECT_ID = "[PROJECT_ID]"
 
     def createFiles(self, interval, aggregation, filter="", i=1, page_token=""):
         client = monitoring_v3.MetricServiceClient()
@@ -18,7 +19,7 @@ class DataExtractor:
         while i < maxsize:
             results = client.list_time_series(
                 request={
-                    "name": "projects/zurusu-500420",
+                    "name": f"projects/{self.PROJECT_ID}",
                     "filter": filter,
                     "interval": interval,
                     "view": monitoring_v3.ListTimeSeriesRequest.TimeSeriesView.FULL,
@@ -64,7 +65,7 @@ class DataExtractor:
         while i < maxsize:
             results = client.list_time_series(
                 request={
-                    "name": "projects/zurusu-500420",
+                    "name": f"projects/{self.PROJECT_ID}",
                     "filter": filter,
                     "interval": interval,
                     "view": monitoring_v3.ListTimeSeriesRequest.TimeSeriesView.FULL,
