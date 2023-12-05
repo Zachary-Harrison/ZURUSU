@@ -28,8 +28,7 @@ import java.time.Instant;
 import java.util.*;
 
 public class DataExtractor {
-//    private static final String PROJECT_ID = "[PROJECT_ID]";
-    private static final String PROJECT_ID = "zurusu-500420";
+   private static final String PROJECT_ID = "[PROJECT_ID]";
     private static final String MERGED_FILENAME = "mergedResponse.json";
     private final String[] fieldnames = {"timestamp", "adservice","cartservice","checkoutservice","currencyservice","emailservice","frontend","paymentservice","productcatalogservice","recommendationservice","shippingservice", "label"};
     private String inputDirectory;
