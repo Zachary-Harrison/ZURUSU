@@ -2,8 +2,13 @@ const axios = require('axios');
 const moment = require('moment');
 const qs = require('qs');
 
-// defining constant variables
-const BASE_URL = '[BASE URL]'; // replace this with the URL for your project
+// retrieving BASE_URL from provided arguments
+const BASE_URL = process.argv[2];
+if (!BASE_URL) {
+  console.error('Please provide a BASE_URL as an argument');
+  process.exit(1);
+}
+
 const PRODUCTS = [
   '0PUK6V6EV0','1YMWWN1N4O','2ZYFJ3GM2N','66VCHSJNUP',
   '6E92ZMYYFZ','9SIQT8TOJO','L9ECAV7KIM','LS4PSXUNUM','OLJCESPC7Z'
