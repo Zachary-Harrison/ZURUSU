@@ -25,12 +25,12 @@ const CURRENCIES = ['EUR', 'USD', 'JPY', 'GBP', 'TRY', 'CAD'];
 //   { start: "2023-11-12T18:00:00Z", end: "2023-11-12T18:59:00Z", task: checkout },
 // ];
 const ATTACKS = [ 
-    { start: "2023-12-05T06:00:00Z", end: "2023-12-05T06:59:00Z", task: index },
-    { start: "2023-12-05T09:00:00Z", end: "2023-12-05T09:59:00Z", task: viewCart },
-    { start: "2023-12-05T12:00:00Z", end: "2023-12-05T12:59:00Z", task: setCurrency },
-    { start: "2023-12-05T15:00:00Z", end: "2023-12-05T15:59:00Z", task: browseProduct },
-    { start: "2023-12-05T18:00:00Z", end: "2023-12-05T18:59:00Z", task: addToCart },
-    { start: "2023-12-05T21:00:00Z", end: "2023-12-05T21:59:00Z", task: checkout },
+    { start: "2023-12-06T06:00:00Z", end: "2023-12-06T06:59:00Z", task: index },
+    { start: "2023-12-06T09:00:00Z", end: "2023-12-06T09:59:00Z", task: viewCart },
+    { start: "2023-12-06T12:00:00Z", end: "2023-12-06T12:59:00Z", task: setCurrency },
+    { start: "2023-12-06T15:00:00Z", end: "2023-12-06T15:59:00Z", task: browseProduct },
+    { start: "2023-12-06T18:00:00Z", end: "2023-12-06T18:59:00Z", task: addToCart },
+    { start: "2023-12-06T21:00:00Z", end: "2023-12-06T21:59:00Z", task: checkout },
   ];
 
 // ==================================
@@ -86,30 +86,32 @@ function timeIsBetween(start, end) {
 }
 
 async function main() {
-    for (const atk of ATTACKS) {
-      atk.isActive = false;
-    }
+  for (const atk of ATTACKS) {
+    atk.isActive = false;
+  }
   
-    while (true) {
-      for (const atk of ATTACKS) {
-        if (timeIsBetween(atk.start, atk.end)) {
-          if (!atk.isActive) {
-            atk.isActive = true;
-            console.log(`Starting attack at ${moment().format('MM/DD/YYYY, h:mm A')}`);
-          }
-          // normal behavior is ~0.55 requests/sec, so make half as many requests by doubling wait time
-          const startTime = Date.now();
-          await atk.task();
-          const elapsedTime = Date.now() - startTime;
-          if (elapsedTime < 1000) {
-            await new Promise(resolve => setTimeout(resolve, 1100 - elapsedTime));
-          }
-        } else if (atk.isActive) {
-          atk.isActive = false;
-          console.log(`Ending attack at ${moment().format('MM/DD/YYYY, h:mm A')}`);
+  while (true) {
+    for (const atk of ATTACKS) {
+      if (timeIsBetween(atk.start, atk.end)) {
+        if (!atk.isActive) {
+          atk.isActive = true;
+          console.log(`Starting attack at ${moment().format('MM/DD/YYYY, h:mm A')}`);
         }
+        // normal behavior is 10 requests every 1-10 seconds (random),
+        //    so make half as many requests by doubling wait time
+        const waitTime = Math.floor(Math.random() * (2000 - 200)) + 200;
+        const startTime = Date.now();
+        await atk.task();
+        const elapsedTime = Date.now() - startTime;
+        if (elapsedTime < waitTime) {
+          await new Promise(resolve => setTimeout(resolve, waitTime - elapsedTime));
+        }
+      } else if (atk.isActive) {
+        atk.isActive = false;
+        console.log(`Ending attack at ${moment().format('MM/DD/YYYY, h:mm A')}`);
       }
     }
   }
+}
   
   main();
