@@ -97,9 +97,8 @@ async function main() {
           atk.isActive = true;
           console.log(`Starting attack at ${moment().format('MM/DD/YYYY, h:mm A')}`);
         }
-        // normal behavior is 10 requests every 1-10 seconds (random),
-        //    so make half as many requests by doubling wait time
-        const waitTime = Math.floor(Math.random() * (2000 - 200)) + 200;
+        // normal behavior makes 10 requests every 1-10 seconds, so make half as many requests
+        const waitTime = Math.floor(Math.random() * (2000 - 200)) + 200; // waits [200-2200] milliseconds
         const startTime = Date.now();
         await atk.task();
         const elapsedTime = Date.now() - startTime;
