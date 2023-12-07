@@ -94,7 +94,7 @@ async function main() {
   // figuring out how much normal behavior "costs" per request, on average
   avg_cost = 0
   for (let i = 0; i < ATTACKS.length; i++) {
-    salary += ATTACKS[i].cost * ATTACKS[i].freq;
+    avg_cost += ATTACKS[i].cost * ATTACKS[i].freq;
   }
   avg_cost *= 10; // there are 10 users
   avg_cost /= 2;  // spend half as much
