@@ -11,7 +11,8 @@ class DataExtractor:
         self.inputDirectory = inputDirectory
         self.outputDirectory = outputDirectory
         self.fieldnames = ["timestamp", "adservice","cartservice","checkoutservice","currencyservice","emailservice","frontend","paymentservice","productcatalogservice","recommendationservice","shippingservice", "label"]
-        self.PROJECT_ID = "[PROJECT_ID]"
+        self.PROJECT_ID = os.environ["PROJECT_ID"]
+        # self.PROJECT_ID = "[PROJECT_ID]"
 
     def createFiles(self, interval, aggregation, filter="", i=1, page_token=""):
         client = monitoring_v3.MetricServiceClient()

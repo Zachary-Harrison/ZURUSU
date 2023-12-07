@@ -6,8 +6,8 @@ from datetime import datetime, timezone
 def main():
     interval = monitoring_v3.TimeInterval(
             {
-                "start_time": "2023-11-12T03:00:00Z",
-                "end_time": "2023-11-12T18:59:00Z",
+                "start_time": "2023-12-06T04:00:00Z",
+                "end_time": "2023-12-06T21:59:00Z",
             }
         )
     
@@ -22,13 +22,14 @@ def main():
         )
     
     attack_periods = [
-        ("2023-11-12T03:00:00Z", "2023-11-12T03:59:00Z"),
-        ("2023-11-12T06:00:00Z", "2023-11-12T06:59:00Z"),
-        ("2023-11-12T09:00:00Z", "2023-11-12T09:59:00Z"),
-        ("2023-11-12T12:00:00Z", "2023-11-12T12:59:00Z"),
-        ("2023-11-12T15:00:00Z", "2023-11-12T15:59:00Z"),
-        ("2023-11-12T18:00:00Z", "2023-11-12T18:59:00Z"),
+        ("2023-12-06T06:00:00Z", "2023-12-06T06:59:00Z"),
+        ("2023-12-06T09:00:00Z", "2023-12-06T09:59:00Z"),
+        ("2023-12-06T12:00:00Z", "2023-12-06T12:59:00Z"),
+        ("2023-12-06T15:00:00Z", "2023-12-06T15:59:00Z"),
+        ("2023-12-06T18:00:00Z", "2023-12-06T18:59:00Z"),
+        ("2023-12-06T21:00:00Z", "2023-12-06T21:59:00Z"),
     ]
+
     # converting attack_periods into posixTimes
     attack_periods = [(datetime.strptime(start, "%Y-%m-%dT%H:%M:%SZ"), datetime.strptime(end, "%Y-%m-%dT%H:%M:%SZ")) for start, end in attack_periods]
     attack_periods = [(start.replace(tzinfo=timezone.utc).timestamp(), end.replace(tzinfo=timezone.utc).timestamp()) for start, end in attack_periods]
@@ -46,6 +47,6 @@ def main():
     extractor.createFiles(interval, aggregation, filter)
     # extractor.createFiles(interval, aggregation, filter, i=10, page_token="COCzm9zZ9f3kwgES7QEiHQoQCgYImp2GqQYSBgianYapBhIJGZqN0NRO84U_Kg1rOHNfY29udGFpbmVyMrwBahcKB3Byb2plY3QaDDI3NDkxNzA2OTQxNWoXCghsb2NhdGlvbhoLdXMtY2VudHJhbDFqHwoMY2x1c3Rlcl9uYW1lGg9vbmxpbmUtYm91dGlxdWVqGQoObmFtZXNwYWNlX25hbWUaB2RlZmF1bHRqMgoIcG9kX25hbWUaJnJlY29tbWVuZGF0aW9uc2VydmljZS02ZjQ3ZGRkOGI4LWx6aGt4ahgKDmNvbnRhaW5lcl9uYW1lGgZzZXJ2ZXI")
     extractor.mergeFiles()
-    extractor.convertToCSV(outputFileName="CPU_Usage-OVERALL_ATTACK.csv", attackPeriods=attack_periods)
+    extractor.convertToCSV(outputFileName="CPU_Usage-OVERALL_LIMITED_ATTACK.csv", attackPeriods=attack_periods)
 
 main()

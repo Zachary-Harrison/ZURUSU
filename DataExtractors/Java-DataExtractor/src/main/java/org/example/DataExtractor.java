@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 import com.google.monitoring.v3.Aggregation;
 import com.google.monitoring.v3.ListTimeSeriesRequest;
 import com.google.monitoring.v3.TimeInterval;
@@ -14,10 +14,10 @@ import com.google.monitoring.v3.TimeSeries;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.lang.reflect.Type;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,7 +28,8 @@ import java.time.Instant;
 import java.util.*;
 
 public class DataExtractor {
-   private static final String PROJECT_ID = "[PROJECT_ID]";
+    private static final String PROJECT_ID = System.getenv("PROJECT_ID");
+//   private static final String PROJECT_ID = "[PROJECT_ID]";
     private static final String MERGED_FILENAME = "mergedResponse.json";
     private final String[] fieldnames = {"timestamp", "adservice","cartservice","checkoutservice","currencyservice","emailservice","frontend","paymentservice","productcatalogservice","recommendationservice","shippingservice", "label"};
     private String inputDirectory;
@@ -58,6 +59,7 @@ public class DataExtractor {
                     .setPageSize(0)
                     .setPageToken(pageToken)
                     .setView(ListTimeSeriesRequest.TimeSeriesView.FULL);
+
             MetricServiceClient.ListTimeSeriesPagedResponse response = client.listTimeSeries(requestBuilder.build());
             for (TimeSeries ts : response.iterateAll()) {
                 // process each TimeSeries object
@@ -137,41 +139,42 @@ public class DataExtractor {
         Files.createDirectories(outputDirPath);  // create the directory if it does not exist
 
         Map<Long, Map<String, Double>> dataDict = new TreeMap<>();
-        String jsonContent = new String(Files.readAllBytes(Paths.get(this.inputDirectory, MERGED_FILENAME)));
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<JsonElement>>(){}.getType();
-        List<JsonElement> list = gson.fromJson(jsonContent, type);
+        try (JsonReader reader = new JsonReader(new FileReader(Paths.get(this.inputDirectory, MERGED_FILENAME).toFile()))) {
+            Gson gson = new Gson();
 
-        for (JsonElement element : list) {
-            JsonObject map = element.getAsJsonObject();
+            reader.beginArray();
+            while (reader.hasNext()) {
+                JsonObject map = gson.fromJson(reader, JsonObject.class);
 
-            String pod_name = map
-                    .getAsJsonObject("resource_")
-                    .getAsJsonObject("labels_")
-                    .getAsJsonObject("mapData")
-                    .get("pod_name").getAsString();
-            String field = this.getField(pod_name);
+                String pod_name = map
+                        .getAsJsonObject("resource_")
+                        .getAsJsonObject("labels_")
+                        .getAsJsonObject("mapData")
+                        .get("pod_name").getAsString();
+                String field = this.getField(pod_name);
 
-            JsonArray pointsArray = map.getAsJsonArray("points_");
-            for (JsonElement pointElement : pointsArray) {
-                JsonObject pointObject = pointElement.getAsJsonObject();
+                JsonArray pointsArray = map.getAsJsonArray("points_");
+                for (JsonElement pointElement : pointsArray) {
+                    JsonObject pointObject = pointElement.getAsJsonObject();
 
-                String seconds = pointObject
-                        .getAsJsonObject("interval_")
-                        .getAsJsonObject("endTime_")
-                        .get("seconds_").getAsString();
+                    String seconds = pointObject
+                            .getAsJsonObject("interval_")
+                            .getAsJsonObject("endTime_")
+                            .get("seconds_")
+                            .getAsString();
 
-                Double value = pointObject
-                        .getAsJsonObject("value_")
-                        .get("value_").getAsDouble();
+                    Double value = pointObject
+                            .getAsJsonObject("value_")
+                            .get("value_")
+                            .getAsDouble();
 
-                // Add the extracted data to dataDict
-                if (field != null && seconds != null && value != null) {
+                    // Add the extracted data to dataDict
                     Long key = Long.parseLong(seconds);
                     Map<String, Double> innerMap = dataDict.computeIfAbsent(key, k -> new HashMap<>());
                     innerMap.put(field, value);
                 }
             }
+            reader.endArray();
         }
 
         DecimalFormat df = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));

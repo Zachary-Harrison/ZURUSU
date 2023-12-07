@@ -26,7 +26,6 @@ Here is an alternative table that documents when each service is attacked, where
 
 | Start Time (RFC 3339) | End Time (RFC 3339)  | ad  | cart | checkout | currency | email | frontend | payment | productcatalog | recommendation | shipping |
 | --------------------- | -------------------- | :-: | :--: | :------: | :------: | :---: | :------: | :-----: | :------------: | :------------: | :------: |
-| 2023-10-07T17:00:00Z  | 2023-10-13T19:00:00Z | 2023-10-07 11:00 AM | 2023-10-13 01:00 PM | None                                                                                             | CPU_Usage-NORMAL.csv         |
 | 2023-11-12T03:00:00Z  | 2023-11-12T03:59:00Z |  X  |  X   |          |    X     |       |    X     |         |       X        |                |          |
 | 2023-11-12T06:00:00Z  | 2023-11-12T06:59:00Z |     |  X   |          |    X     |       |    X     |         |       X        |       X        |    X     |
 | 2023-11-12T09:00:00Z  | 2023-11-12T09:59:00Z |  X  |  X   |          |    X     |       |    X     |         |       X        |                |          |
