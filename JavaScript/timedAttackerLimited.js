@@ -99,7 +99,6 @@ async function main() {
   
   minWait = 1_000;
   maxWait = 10_000;
-  console.log(`\AVERAGE_COST = ${normalExpectedCost}`)
   while (true) {
     for (const atk of ATTACKS) {
       if (timeIsBetween(atk.start, atk.end)) {
@@ -109,7 +108,6 @@ async function main() {
         }
         const randNumGen = Math.floor(Math.random() * (maxWait - minWait)) + minWait
         const waitTime = (2 / 10) * (atk.cost / normalExpectedCost) * randNumGen;  // 1.5 output of 10 users
-        console.log(`\twaitTime = (${atk.cost} / ${normalExpectedCost}) * (${randNumGen})= ${waitTime}`)
         const startTime = Date.now();
         await atk.task();
         const elapsedTime = Date.now() - startTime;
