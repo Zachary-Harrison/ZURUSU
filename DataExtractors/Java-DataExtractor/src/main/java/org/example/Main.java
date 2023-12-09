@@ -19,8 +19,8 @@ public class Main {
 //        String startDateString = "2023-11-12T03:00:00Z";
 //        String endDateString = "2023-11-12T18:59:00Z";
         // LIMITED attack-overall times
-        String startDateString = "2023-12-06T04:00:00Z";
-        String endDateString = "2023-12-06T21:59:00Z";
+        String startDateString = "2023-12-09T01:00:00Z";
+        String endDateString = "2023-12-09T18:59:00Z";
 
         SimpleDateFormat rfc3339Formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
         Date startDate = rfc3339Formatter.parse(startDateString);
@@ -48,12 +48,12 @@ public class Main {
                 + "metadata.system_labels.\"service_name\"!=monitoring.regex.full_match(\"redis-cart\")";
 
         List<String[]> attackPeriods = Arrays.asList(
-                new String[]{"2023-12-06T06:00:00Z", "2023-12-06T06:59:00Z"},
-                new String[]{"2023-12-06T09:00:00Z", "2023-12-06T09:59:00Z"},
-                new String[]{"2023-12-06T12:00:00Z", "2023-12-06T12:59:00Z"},
-                new String[]{"2023-12-06T15:00:00Z", "2023-12-06T15:59:00Z"},
-                new String[]{"2023-12-06T18:00:00Z", "2023-12-06T18:59:00Z"},
-                new String[]{"2023-12-06T21:00:00Z", "2023-12-06T21:59:00Z"}
+                new String[]{"2023-12-09T03:00:00Z", "2023-12-09T03:59:00Z"},
+                new String[]{"2023-12-09T06:00:00Z", "2023-12-09T06:59:00Z"},
+                new String[]{"2023-12-09T09:00:00Z", "2023-12-09T09:59:00Z"},
+                new String[]{"2023-12-09T12:00:00Z", "2023-12-09T12:59:00Z"},
+                new String[]{"2023-12-09T15:00:00Z", "2023-12-09T15:59:00Z"},
+                new String[]{"2023-12-09T18:00:00Z", "2023-12-09T18:59:00Z"}
             );
 
         DataExtractor extractor = new DataExtractor("pages", "output");
@@ -62,7 +62,7 @@ public class Main {
             extractor.mergeFiles();
 //            extractor.convertToCSV("CPU_Usage-NORMAL.csv");
 //            extractor.convertToCSV("CPU_Usage-OVERALL_ATTACK.csv", attackPeriods);
-            extractor.convertToCSV("CPU_Usage-OVERALL_LIMITED_ATTACK.csv", attackPeriods);
+            extractor.convertToCSV("CPU_Usage-OVERALL_LIMITED_ATTACKv2.csv", attackPeriods);
         }
         catch (Exception e) {
             System.err.println(e.toString());

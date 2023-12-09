@@ -6,8 +6,8 @@ from datetime import datetime, timezone
 def main():
     interval = monitoring_v3.TimeInterval(
             {
-                "start_time": "2023-12-06T04:00:00Z",
-                "end_time": "2023-12-06T21:59:00Z",
+                "start_time": "2023-12-09T01:00:00Z",
+                "end_time": "2023-12-09T18:59:00Z",
             }
         )
     
@@ -22,12 +22,12 @@ def main():
         )
     
     attack_periods = [
-        ("2023-12-06T06:00:00Z", "2023-12-06T06:59:00Z"),
-        ("2023-12-06T09:00:00Z", "2023-12-06T09:59:00Z"),
-        ("2023-12-06T12:00:00Z", "2023-12-06T12:59:00Z"),
-        ("2023-12-06T15:00:00Z", "2023-12-06T15:59:00Z"),
-        ("2023-12-06T18:00:00Z", "2023-12-06T18:59:00Z"),
-        ("2023-12-06T21:00:00Z", "2023-12-06T21:59:00Z"),
+        ("2023-12-09T03:00:00Z", "2023-12-09T03:59:00Z"),
+        ("2023-12-09T06:00:00Z", "2023-12-09T06:59:00Z"),
+        ("2023-12-09T09:00:00Z", "2023-12-09T09:59:00Z"),
+        ("2023-12-09T12:00:00Z", "2023-12-09T12:59:00Z"),
+        ("2023-12-09T15:00:00Z", "2023-12-09T15:59:00Z"),
+        ("2023-12-09T18:00:00Z", "2023-12-09T18:59:00Z"),
     ]
 
     # converting attack_periods into posixTimes
@@ -47,6 +47,6 @@ def main():
     extractor.createFiles(interval, aggregation, filter)
     # extractor.createFiles(interval, aggregation, filter, i=10, page_token="COCzm9zZ9f3kwgES7QEiHQoQCgYImp2GqQYSBgianYapBhIJGZqN0NRO84U_Kg1rOHNfY29udGFpbmVyMrwBahcKB3Byb2plY3QaDDI3NDkxNzA2OTQxNWoXCghsb2NhdGlvbhoLdXMtY2VudHJhbDFqHwoMY2x1c3Rlcl9uYW1lGg9vbmxpbmUtYm91dGlxdWVqGQoObmFtZXNwYWNlX25hbWUaB2RlZmF1bHRqMgoIcG9kX25hbWUaJnJlY29tbWVuZGF0aW9uc2VydmljZS02ZjQ3ZGRkOGI4LWx6aGt4ahgKDmNvbnRhaW5lcl9uYW1lGgZzZXJ2ZXI")
     extractor.mergeFiles()
-    extractor.convertToCSV(outputFileName="CPU_Usage-OVERALL_LIMITED_ATTACK.csv", attackPeriods=attack_periods)
+    extractor.convertToCSV(outputFileName="CPU_Usage-OVERALL_LIMITED_ATTACKv2.csv", attackPeriods=attack_periods)
 
 main()

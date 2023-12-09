@@ -16,12 +16,12 @@ const PRODUCTS = [
 const QUANTITIES = [1, 2, 3, 4, 5, 10];
 const CURRENCIES = ['EUR', 'USD', 'JPY', 'GBP', 'TRY', 'CAD'];
 const ATTACKS = [  // cost = # of services affected; freq = distribution of pages visited in normal behavior
-  { start: "2023-12-06T06:00:00Z", end: "2023-12-06T06:59:00Z", task: 'index',          cost: 5,  freq: 1 },
-  { start: "2023-12-06T09:00:00Z", end: "2023-12-06T09:59:00Z", task: 'viewCart',       cost: 6,  freq: 2 },
-  { start: "2023-12-06T12:00:00Z", end: "2023-12-06T12:59:00Z", task: 'setCurrency',    cost: 5,  freq: 10},
-  { start: "2023-12-06T15:00:00Z", end: "2023-12-06T15:59:00Z", task: 'browseProduct',  cost: 6,  freq: 2 },
-  { start: "2023-12-06T18:00:00Z", end: "2023-12-06T18:59:00Z", task: 'addToCart',      cost: 6,  freq: 3 },
-  { start: "2023-12-06T21:00:00Z", end: "2023-12-06T21:59:00Z", task: 'checkout',       cost: 10, freq: 1 },
+  { start: "2023-12-10T03:00:00Z", end: "2023-12-10T03:59:00Z", task: index,          cost: 5,  freq: 1 },
+  { start: "2023-12-10T06:00:00Z", end: "2023-12-10T06:59:00Z", task: viewCart,       cost: 6,  freq: 2 },
+  { start: "2023-12-10T09:00:00Z", end: "2023-12-10T09:59:00Z", task: setCurrency,    cost: 5,  freq: 10},
+  { start: "2023-12-10T12:00:00Z", end: "2023-12-10T12:59:00Z", task: browseProduct,  cost: 6,  freq: 2 },
+  { start: "2023-12-10T15:00:00Z", end: "2023-12-10T15:59:00Z", task: addToCart,      cost: 6,  freq: 3 },
+  { start: "2023-12-10T18:00:00Z", end: "2023-12-10T18:59:00Z", task: checkout,       cost: 10, freq: 1 },
 ];
 
 
@@ -88,19 +88,18 @@ async function main() {
     freqTotal += ATTACKS[i].freq;
   }
   for (let i = 0; i < ATTACKS.length; i++) {
-    ATTACKS[i].freq /= ATTACKS.freqTotal;
+    ATTACKS[i].freq /= freqTotal;
   }
   
   // figuring out how much normal behavior "costs" per request, on average
-  avg_cost = 0
+  normalExpectedCost = 0
   for (let i = 0; i < ATTACKS.length; i++) {
-    avg_cost += ATTACKS[i].cost * ATTACKS[i].freq;
+    normalExpectedCost += ATTACKS[i].cost * ATTACKS[i].freq;
   }
-  avg_cost *= 10; // there are 10 users
-  avg_cost /= 2;  // spend half as much
   
-  min_wait = 1_000;
-  max_wait = 10_000;
+  minWait = 1_000;
+  maxWait = 10_000;
+  console.log(`\AVERAGE_COST = ${normalExpectedCost}`)
   while (true) {
     for (const atk of ATTACKS) {
       if (timeIsBetween(atk.start, atk.end)) {
@@ -108,7 +107,9 @@ async function main() {
           atk.isActive = true;
           console.log(`Starting attack at ${moment().format('MM/DD/YYYY, h:mm A')}`);
         }
-        const waitTime = (salary / atk.cost) * Math.floor(Math.random() * (max_wait - min_wait)) + min_wait;
+        const randNumGen = Math.floor(Math.random() * (maxWait - minWait)) + minWait
+        const waitTime = (2 / 10) * (atk.cost / normalExpectedCost) * randNumGen;  // 1.5 output of 10 users
+        console.log(`\twaitTime = (${atk.cost} / ${normalExpectedCost}) * (${randNumGen})= ${waitTime}`)
         const startTime = Date.now();
         await atk.task();
         const elapsedTime = Date.now() - startTime;
