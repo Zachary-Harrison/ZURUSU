@@ -65,7 +65,7 @@ In the [JavaScript](JavaScript/) directory, I've provided a few files:
 
 ### 5. Retrieving Data
 
-I have provided two different implementations to retrieve data from this project.
+I have provided two different implementations to retrieve data from this project. The Java version is recommended, as Java more easily supports the reading and creation of large files. 
 
 #### DataExtractor (Java)
 
@@ -99,13 +99,6 @@ I have provided two different implementations to retrieve data from this project
 - [Retrieving time-series data](https://cloud.google.com/monitoring/custom-metrics/reading-metrics) from a Google Cloud Server.
 - Converting between [local time and UTC time](https://www.worldtimebuddy.com/).
 - What is [RFFC 3339 format](https://www.rfc-editor.org/rfc/rfc3339#:~:text=Abstract%20This%20document%20defines%20a,times%20using%20the%20Gregorian%20calendar.).
-
-
-Depending on how large your dataset is, you might run into various problems regarding heap or stack space (I know I did). For this reason, I have provided two separate implementations to retrieve your dataset:
-- [DataExtractor (Java)](DataExtractors/Java-DataExtractor/): To use this project, I recommend opening it in IntelliJ and updating the [Main.java](DataExtractors/Java-DataExtractor/src/main/java/org/example/Main.java) and [DataExtractor.java](DataExtractors/Java-DataExtractor/src/main/java/org/example/DataExtractor.java) files to point to your app.
-- [DataExtractor (Python)](DataExtractors/Python-DataExtractor/): You should be able to open this in any IDE that supports python development.
-
-I recommend using the Java version because it is more robust (i.e. runs into less memory issues), but I have also provided the Python version for a reason. 
 
 ### 6. (Optional) EDA
 
