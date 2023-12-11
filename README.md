@@ -1,6 +1,6 @@
 # ZURUSU
 
-## Models
+## Results
 
 In this project, I built two different Proof-Of-Concept (POC) models capable of classifying microservice server attacks with over 99% accuracy.
 
@@ -20,11 +20,13 @@ In this model, I limit the overall CPU usage during attacks to 1.5x the usage du
 |                  ![LearningCurve_1.png](images/LearningCurve_2.png)                  |     |            ![ROC_1.png](images/ROC_2.png)            |
 
 
-## Reproducing
+## Jupyter Notebooks
 
-If all you want to do is reproduce the same results I got, you can download and run the [usad notebook](USAD.ipynb)
+You can download and run either of these Jupyter notebooks without any additional configuration:
+- [model version 1](USADv1.ipynb)
+- [model version 2](USADv2.ipynb)
 
-However, if you want to expand on this project by generating your own dataset(s), follow the below [Build Instructions](#build-instructions).
+However, if you want to expand on this project by generating your own dataset(s), follow the [Build Instructions](#build-instructions) below.
 
 ## Build Instructions
 
@@ -36,9 +38,10 @@ git clone https://github.com/Zachary-Harrison/ZURUSU.git
 
 ### 2. Set up microservices-demo
 
-Follow the [Quickstart (GKE) instructions](https://github.com/GoogleCloudPlatform/microservices-demo/tree/main#quickstart-gke) provided by microservices-demo. 
-
-Be sure to clone the microservices-demo in a folder that is not already a repository. 
+1. Follow the [Quickstart (GKE) instructions](https://github.com/GoogleCloudPlatform/microservices-demo/tree/main#quickstart-gke) provided by microservices-demo. 
+   - Be sure to clone the microservices-demo in a folder that is not already a repository. 
+2. Create a service account [here](https://console.cloud.google.com/iam-admin/serviceaccounts/) for your project
+3. [Deploy Online Boutique variations with Kustomize](https://github.com/GoogleCloudPlatform/microservices-demo/tree/main/kustomize/components/google-cloud-operations)
 
 ### 3. (Optional) Modify app behavior
 
@@ -109,7 +112,7 @@ If you want to see what your data looks like, use the [ATTACK_EDA.ipynb](ATTACK_
 Finally, you can create your model by running the [USAD.ipynb](USAD.ipynb) notebook, substituting your data for the default data. Be sure to modify the notebook so that it's reading your data from the correct spot.
 
 
-# Future Works
+## Future Works
 
 While this is only a POC model, it shows some real potential for using Machine Learning in preventing hackers from attacking various components of microservices! 
 - **Idea 1**: Document the project on GitHub so that anyone can reproduce the same results.
@@ -117,7 +120,7 @@ While this is only a POC model, it shows some real potential for using Machine L
 - **Idea 3**: Make more realistic, covert attacks.
 - **Idea 4**: Implement a real-time defense strategy using our model.
 
-# Citations
+## Citations
 
 If you liked this repository, please consider checking these ones out. This project would've been impossible without them:
 - [microservices-demo](https://github.com/GoogleCloudPlatform/microservices-demo/tree/main)
