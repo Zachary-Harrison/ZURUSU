@@ -1,13 +1,15 @@
 from dataExtractor import DataExtractor
 from google.cloud import monitoring_v3
 import sys
+from dotenv import load_dotenv
+import os
 from datetime import datetime, timezone
 
 def main():
     interval = monitoring_v3.TimeInterval(
             {
-                "start_time": "2023-12-09T01:00:00Z",
-                "end_time": "2023-12-09T18:59:00Z",
+                "start_time": "2023-11-14T19:00:00Z",
+                "end_time": "2023-11-27T19:00:00Z",
             }
         )
     
@@ -22,12 +24,12 @@ def main():
         )
     
     attack_periods = [
-        ("2023-12-09T03:00:00Z", "2023-12-09T03:59:00Z"),
-        ("2023-12-09T06:00:00Z", "2023-12-09T06:59:00Z"),
-        ("2023-12-09T09:00:00Z", "2023-12-09T09:59:00Z"),
-        ("2023-12-09T12:00:00Z", "2023-12-09T12:59:00Z"),
-        ("2023-12-09T15:00:00Z", "2023-12-09T15:59:00Z"),
-        ("2023-12-09T18:00:00Z", "2023-12-09T18:59:00Z"),
+        ("2023-12-10T03:00:00Z", "2023-12-10T03:59:00Z"),
+        ("2023-12-10T06:00:00Z", "2023-12-10T06:59:00Z"),
+        ("2023-12-10T09:00:00Z", "2023-12-10T09:59:00Z"),
+        ("2023-12-10T12:00:00Z", "2023-12-10T12:59:00Z"),
+        ("2023-12-10T15:00:00Z", "2023-12-10T15:59:00Z"),
+        ("2023-12-10T18:00:00Z", "2023-12-10T18:59:00Z"),
     ]
 
     # converting attack_periods into posixTimes
@@ -43,10 +45,11 @@ def main():
                         metadata.system_labels.\"service_name\"!=monitoring.regex.full_match(\"opentelemetrycollector\") \
                         metadata.system_labels.\"service_name\"!=monitoring.regex.full_match(\"alertmanager\") \
                         metadata.system_labels.\"service_name\"!=monitoring.regex.full_match(\"redis-cart\")" 
-    extractor = DataExtractor()
+    load_dotenv()
+    extractor = DataExtractor(os.getenv("PROJECT_ID"))
     extractor.createFiles(interval, aggregation, filter)
-    # extractor.createFiles(interval, aggregation, filter, i=10, page_token="COCzm9zZ9f3kwgES7QEiHQoQCgYImp2GqQYSBgianYapBhIJGZqN0NRO84U_Kg1rOHNfY29udGFpbmVyMrwBahcKB3Byb2plY3QaDDI3NDkxNzA2OTQxNWoXCghsb2NhdGlvbhoLdXMtY2VudHJhbDFqHwoMY2x1c3Rlcl9uYW1lGg9vbmxpbmUtYm91dGlxdWVqGQoObmFtZXNwYWNlX25hbWUaB2RlZmF1bHRqMgoIcG9kX25hbWUaJnJlY29tbWVuZGF0aW9uc2VydmljZS02ZjQ3ZGRkOGI4LWx6aGt4ahgKDmNvbnRhaW5lcl9uYW1lGgZzZXJ2ZXI")
     extractor.mergeFiles()
-    extractor.convertToCSV(outputFileName="CPU_Usage-OVERALL_LIMITED_ATTACKv2.csv", attackPeriods=attack_periods)
+    # extractor.convertToCSV(outputFileName="CPU_Usage-NORMALv2.csv")
+    extractor.convertToCSV(outputFileName="CPU_Usage-OVERAL_ATTACKv2.csv", attackPeriods=attack_periods)
 
 main()

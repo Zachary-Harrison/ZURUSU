@@ -10,6 +10,7 @@ DataExtractors/Java-DataExtractor/.project
 DataExtractors/Java-DataExtractor/.idea/
 
 # Python
+DataExtractors/Python-DataExtractor/.env
 DataExtractors/Python-DataExtractor/myenv/
 DataExtractors/Python-DataExtractor/__pycache__/
 DataExtractors/Python-DataExtractor/*.py[cod]

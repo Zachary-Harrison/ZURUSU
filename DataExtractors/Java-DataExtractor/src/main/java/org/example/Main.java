@@ -12,19 +12,18 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException, ParseException {
-//        // normal times
-//        String startDateString = "2023-10-07T17:00:00Z";
-//        String endDateString = "2023-10-13T19:00:00Z";
-//        // attack-overall times
-//        String startDateString = "2023-11-12T03:00:00Z";
-//        String endDateString = "2023-11-12T18:59:00Z";
-        // LIMITED attack-overall times
-        String startDateString = "2023-12-09T01:00:00Z";
-        String endDateString = "2023-12-09T18:59:00Z";
-
         SimpleDateFormat rfc3339Formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-        Date startDate = rfc3339Formatter.parse(startDateString);
-        Date endDate = rfc3339Formatter.parse(endDateString);
+        Date startDate = rfc3339Formatter.parse("2023-10-07T17:00:00Z");
+        Date endDate = rfc3339Formatter.parse("2023-10-13T19:00:00Z");
+        List<String[]> attackPeriods = Arrays.asList(
+                new String[]{"2023-12-10T03:00:00Z", "2023-12-10T03:59:00Z"},
+                new String[]{"2023-12-10T06:00:00Z", "2023-12-10T06:59:00Z"},
+                new String[]{"2023-12-10T09:00:00Z", "2023-12-10T09:59:00Z"},
+                new String[]{"2023-12-10T12:00:00Z", "2023-12-10T12:59:00Z"},
+                new String[]{"2023-12-10T15:00:00Z", "2023-12-10T15:59:00Z"},
+                new String[]{"2023-12-10T18:00:00Z", "2023-12-10T18:59:00Z"}
+        );
+
         TimeInterval interval =
                 TimeInterval.newBuilder()
                         .setStartTime(Timestamps.fromMillis(startDate.getTime()))
@@ -47,22 +46,12 @@ public class Main {
                 + "metadata.system_labels.\"service_name\"!=monitoring.regex.full_match(\"alertmanager\") "
                 + "metadata.system_labels.\"service_name\"!=monitoring.regex.full_match(\"redis-cart\")";
 
-        List<String[]> attackPeriods = Arrays.asList(
-                new String[]{"2023-12-09T03:00:00Z", "2023-12-09T03:59:00Z"},
-                new String[]{"2023-12-09T06:00:00Z", "2023-12-09T06:59:00Z"},
-                new String[]{"2023-12-09T09:00:00Z", "2023-12-09T09:59:00Z"},
-                new String[]{"2023-12-09T12:00:00Z", "2023-12-09T12:59:00Z"},
-                new String[]{"2023-12-09T15:00:00Z", "2023-12-09T15:59:00Z"},
-                new String[]{"2023-12-09T18:00:00Z", "2023-12-09T18:59:00Z"}
-            );
-
-        DataExtractor extractor = new DataExtractor("pages", "output");
-        try{
+        DataExtractor extractor = new DataExtractor(System.getenv("PROJECT_ID"), "pages", "output");
+        try {
             extractor.createFiles(interval, aggregation, filter);
             extractor.mergeFiles();
-//            extractor.convertToCSV("CPU_Usage-NORMAL.csv");
+            extractor.convertToCSV("CPU_Usage-NORMAL.csv");
 //            extractor.convertToCSV("CPU_Usage-OVERALL_ATTACK.csv", attackPeriods);
-            extractor.convertToCSV("CPU_Usage-OVERALL_LIMITED_ATTACKv2.csv", attackPeriods);
         }
         catch (Exception e) {
             System.err.println(e.toString());

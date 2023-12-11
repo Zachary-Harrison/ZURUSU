@@ -7,11 +7,11 @@ from csv import DictWriter
 from dateutil import parser
 
 class DataExtractor:
-    def __init__(self, inputDirectory="pages", outputDirectory="output"):
+    def __init__(self, project_id, inputDirectory="pages", outputDirectory="output"):
+        self.PROJECT_ID = project_id
         self.inputDirectory = inputDirectory
         self.outputDirectory = outputDirectory
         self.fieldnames = ["timestamp", "adservice","cartservice","checkoutservice","currencyservice","emailservice","frontend","paymentservice","productcatalogservice","recommendationservice","shippingservice", "label"]
-        self.PROJECT_ID = os.environ["PROJECT_ID"]
         # self.PROJECT_ID = "[PROJECT_ID]"
 
     def createFiles(self, interval, aggregation, filter="", i=1, page_token=""):

@@ -28,41 +28,38 @@ import java.time.Instant;
 import java.util.*;
 
 public class DataExtractor {
-    private static final String PROJECT_ID = System.getenv("PROJECT_ID");
-//   private static final String PROJECT_ID = "[PROJECT_ID]";
+    private final String projectID;
+    private final String inputDirectory;
+    private final String outputDirectory;
     private static final String MERGED_FILENAME = "mergedResponse.json";
     private final String[] fieldnames = {"timestamp", "adservice","cartservice","checkoutservice","currencyservice","emailservice","frontend","paymentservice","productcatalogservice","recommendationservice","shippingservice", "label"};
-    private String inputDirectory;
-    private String outputDirectory;
 
-
-    public DataExtractor(String inputDirectory, String outputDirectory) {
+    public DataExtractor(String project_id, String inputDirectory, String outputDirectory) {
+        this.projectID = project_id;
         this.inputDirectory = inputDirectory;
         this.outputDirectory = outputDirectory;
     }
 
-    public void createFiles(TimeInterval interval, Aggregation aggregation, String filter) throws IOException, ApiException {
+    public void createFiles(TimeInterval interval, Aggregation aggregation, String filter, int i, String pageToken) throws IOException, ApiException {
         System.out.println("creating files...");
         MetricServiceClient client = MetricServiceClient.create();
         Path inputDirPath = Paths.get(this.inputDirectory);
         Files.createDirectories(inputDirPath);  // create the directory if it does not exist
 
         Gson gson = new Gson();
-        String pageToken = "";
-        int i = 0;
         while (i < Integer.MAX_VALUE) {
             ListTimeSeriesRequest.Builder requestBuilder = ListTimeSeriesRequest.newBuilder()
-                    .setName("projects/" + PROJECT_ID)
-                    .setFilter(filter)
+                    .setName("projects/" + this.projectID)
                     .setInterval(interval)
                     .setAggregation(aggregation)
+                    .setFilter(filter)
                     .setPageSize(0)
                     .setPageToken(pageToken)
                     .setView(ListTimeSeriesRequest.TimeSeriesView.FULL);
 
             MetricServiceClient.ListTimeSeriesPagedResponse response = client.listTimeSeries(requestBuilder.build());
+            // process each TimeSeries object in the response
             for (TimeSeries ts : response.iterateAll()) {
-                // process each TimeSeries object
                 try (Writer writer = Files.newBufferedWriter(inputDirPath.resolve("page" + i + ".json"))) {
                     gson.toJson(ts, writer);
                 }
@@ -71,9 +68,15 @@ public class DataExtractor {
             pageToken = response.getNextPageToken();
             if (pageToken == null || pageToken.isEmpty()) {
                 break;
+            }else {
+                System.out.println("\tpageToken(" + i + ") = " + pageToken);
             }
+
         }
         client.close();
+    }
+    public void createFiles(TimeInterval interval, Aggregation aggregation, String filter) throws IOException, ApiException {
+        createFiles(interval, aggregation, filter, 0, "");
     }
 
     private String getField(String rawField) {

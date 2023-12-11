@@ -1,10 +1,23 @@
 # ZURUSU
 
-In this project, I built a Proof-Of-Concept (POC) model capable of classifying microservice server attacks with 99.5% accuracy. As proof, here are the results:
+## Models
+
+In this project, I built two different Proof-Of-Concept (POC) models capable of classifying microservice server attacks with over 99% accuracy.
+
+### Model version 1: Unlimited Requests
 
 |                                    Learning Curve                                    |     |                      ROC Curve                       |
 | :----------------------------------------------------------------------------------: | :-: | :--------------------------------------------------: |
 |                  ![LearningCurve_1.png](images/LearningCurve_1.png)                  |     |            ![ROC_1.png](images/ROC_1.png)            |
+
+
+### Model version 2: Limited Requests
+
+In this model, I limit the overall CPU usage during attacks to 1.5x the usage during normal periods.
+
+|                                    Learning Curve                                    |     |                      ROC Curve                       |
+| :----------------------------------------------------------------------------------: | :-: | :--------------------------------------------------: |
+|                  ![LearningCurve_1.png](images/LearningCurve_2.png)                  |     |            ![ROC_1.png](images/ROC_2.png)            |
 
 
 ## Reproducing
@@ -24,6 +37,8 @@ git clone https://github.com/Zachary-Harrison/ZURUSU.git
 ### 2. Set up microservices-demo
 
 Follow the [Quickstart (GKE) instructions](https://github.com/GoogleCloudPlatform/microservices-demo/tree/main#quickstart-gke) provided by microservices-demo. 
+
+Be sure to clone the microservices-demo in a folder that is not already a repository. 
 
 ### 3. (Optional) Modify app behavior
 
@@ -50,11 +65,47 @@ In the [JavaScript](JavaScript/) directory, I've provided a few files:
 
 ### 5. Retrieving Data
 
+I have provided two different implementations to retrieve data from this project.
+
+#### DataExtractor (Java)
+
+1. Open the [DataExtractor (Java)](DataExtractors/Java-DataExtractor/) folder in [IntelliJ](https://www.jetbrains.com/idea/download/?section=windows).
+2. Add Run/Debug Configuration. Click [here](https://www.jetbrains.com/help/idea/run-debug-configuration.html) for more information.
+   - Main class: Main.java
+   - Program arguments: -Xmx2048m 
+   - Environment variables: PROJECT_ID=REPLACE_ME
+     - Replace REPLACE_ME with your project id, which you can find [here](https://console.developers.google.com/)
+3. Update the `startDate` and `endDate` variables in `Main.java`. These dates must be in the UTC timezone. 
+4. Update the `attackPeriods` variable in `Main.java`. These dates must be in the UTC timezone.
+5. Run your Run/Debug configuration!
+
+
+#### DataExtractor (Python)
+
+1. Open the [DataExtractor (Python)](DataExtractors/Python-DataExtractor/) in your favorite IDE. 
+2. Use [`dotenv`](https://pypi.org/project/python-dotenv/) to set up the PROJECT_ID environment variable. To do so, execute the following command in a terminal, replacing REPLACE_ME with your project id (found [here](https://console.developers.google.com/)):
+   ```bash
+   echo "PROJECT_ID=REPLACE_ME" > .env
+   ```
+3. Update the `interval` variable according to the start and end time for the data you'd like to collect. These dates must be in the UTC timezone. 
+4. Modify the `attack_periods` variable in `main.py`. These dates must be in the UTC timezone. 
+5. Execute your program:
+   ```bash
+   python main.py
+   ```
+
+#### Relevant Resources
+
+- [Retrieving time-series data](https://cloud.google.com/monitoring/custom-metrics/reading-metrics) from a Google Cloud Server.
+- Converting between [local time and UTC time](https://www.worldtimebuddy.com/).
+- What is [RFFC 3339 format](https://www.rfc-editor.org/rfc/rfc3339#:~:text=Abstract%20This%20document%20defines%20a,times%20using%20the%20Gregorian%20calendar.).
+
+
 Depending on how large your dataset is, you might run into various problems regarding heap or stack space (I know I did). For this reason, I have provided two separate implementations to retrieve your dataset:
 - [DataExtractor (Java)](DataExtractors/Java-DataExtractor/): To use this project, I recommend opening it in IntelliJ and updating the [Main.java](DataExtractors/Java-DataExtractor/src/main/java/org/example/Main.java) and [DataExtractor.java](DataExtractors/Java-DataExtractor/src/main/java/org/example/DataExtractor.java) files to point to your app.
-  - The CSV converting is much more robust in this version.
-- [DataExtractor (Python)](DataExtractors/Python-DataExtractor/)
-  - This version frequently encounters segmentation faults, but it allows you to start at a specific page by grabbing its nextPageToken attribute (at the bottom of the page.json response).
+- [DataExtractor (Python)](DataExtractors/Python-DataExtractor/): You should be able to open this in any IDE that supports python development.
+
+I recommend using the Java version because it is more robust (i.e. runs into less memory issues), but I have also provided the Python version for a reason. 
 
 ### 6. (Optional) EDA
 
@@ -72,11 +123,10 @@ While this is only a POC model, it shows some real potential for using Machine L
 - **Idea 2**: Re-produce these results using the other models that Xiao provided.
 - **Idea 3**: Make more realistic, covert attacks.
 - **Idea 4**: Implement a real-time defense strategy using our model.
-- **Idea 5**: Repeat the experiment, but try to limit the CPU usage during attacks to 1.5x the normal value(s).
 
 # Citations
 
-If you liked this repository, please consider checking these ones out, for they made this project possible:
+If you liked this repository, please consider checking these ones out. This project would've been impossible without them:
 - [microservices-demo](https://github.com/GoogleCloudPlatform/microservices-demo/tree/main)
 - [usad](https://github.com/manigalati/usad)
     ```
