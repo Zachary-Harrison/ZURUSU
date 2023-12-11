@@ -79,30 +79,6 @@ public class DataExtractor {
         createFiles(interval, aggregation, filter, 0, "");
     }
 
-    private String getField(String rawField) {
-        String field = "";
-        for (String fieldname : this.fieldnames) {
-            if (rawField.startsWith(fieldname)) {
-                field = fieldname;
-            }
-        }
-        return field;
-    }
-
-    private int getLabel(List<String[]> attackPeriods, long timestamp) {
-        if (attackPeriods == null) {
-            return 0;
-        }
-        for (String[] periods : attackPeriods) {
-            long startTime = Instant.parse(periods[0]).getEpochSecond();
-            long endTime = Instant.parse(periods[1]).getEpochSecond();
-            if (timestamp >= startTime && timestamp <= endTime) {
-                return 1;
-            }
-        }
-        return 0;
-    }
-
     public void mergeFiles() throws IOException {
         System.out.println("merging files...");
         Gson gson = new Gson();
@@ -132,6 +108,30 @@ public class DataExtractor {
         }
     }
 
+    private String getField(String rawField) {
+        String field = "";
+        for (String fieldname : this.fieldnames) {
+            if (rawField.startsWith(fieldname)) {
+                field = fieldname;
+            }
+        }
+        return field;
+    }
+
+    private int getLabel(List<String[]> attackPeriods, long timestamp) {
+        if (attackPeriods == null) {
+            return 0;
+        }
+        for (String[] periods : attackPeriods) {
+            long startTime = Instant.parse(periods[0]).getEpochSecond();
+            long endTime = Instant.parse(periods[1]).getEpochSecond();
+            if (timestamp >= startTime && timestamp <= endTime) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+
     public void convertToCSV(String outputFileName, List<String[]> attackPeriods) throws IOException {
         System.out.println("converting files...");
         if (!outputFileName.endsWith(".csv")) {
@@ -141,6 +141,7 @@ public class DataExtractor {
         Path outputDirPath = Paths.get(this.outputDirectory);
         Files.createDirectories(outputDirPath);  // create the directory if it does not exist
 
+        // Reading the time-series data
         Map<Long, Map<String, Double>> dataDict = new TreeMap<>();
         try (JsonReader reader = new JsonReader(new FileReader(Paths.get(this.inputDirectory, MERGED_FILENAME).toFile()))) {
             Gson gson = new Gson();
@@ -180,9 +181,9 @@ public class DataExtractor {
             reader.endArray();
         }
 
+        // Generating the CSV from time-series data
         DecimalFormat df = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
         df.setMaximumFractionDigits(340); // 340 = DecimalFormat.DOUBLE_FRACTION_DIGITS
-
         try (CSVPrinter printer = new CSVPrinter(Files.newBufferedWriter(
                 Paths.get(this.outputDirectory, outputFileName)),
                 CSVFormat.DEFAULT.withHeader(this.fieldnames)) // Add this line to print the headers
