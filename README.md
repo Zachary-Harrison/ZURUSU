@@ -4,6 +4,8 @@
 
 In this project, I built two different Proof-Of-Concept (POC) models capable of classifying microservice server attacks with over 99% accuracy.
 
+See [dataLog.md](dataLog.md) for more information regarding when the datasets were created.
+
 ### Model version 1: Unlimited Requests
 
 |                                    Learning Curve                                    |     |                      ROC Curve                       |
