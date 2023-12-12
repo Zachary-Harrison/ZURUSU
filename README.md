@@ -54,17 +54,23 @@ As a brief summary, you need to create your own Docker images (I recommend using
 ### 4. Simulating attack behavior
 
 In the [JavaScript](JavaScript/) directory, I've provided a few files:
-1. [immediateAttacker.js](JavaScript/immediateAttacker.js): Makes requests while running. Mainly used during development to see if you've got things working properly. Use it like this, replacing `EXTERNAL_IP` with the frontend's external IP.
+- [immediateAttacker.js](JavaScript/immediateAttacker.js): Makes requests while running. Mainly used during development to see if you've got things working properly. Use it like this, replacing `EXTERNAL_IP` with the frontend's external IP.
    ```bash
     node immediateAttacker.js [http://EXTERNAL_IP]
    ```
-2. [timedAttacker.js](JavaScript/timedAttacker.js): Makes requests during specific time intervals. Use it like this, replacing `EXTERNAL_IP` with the frontend's external IP.
+- [timedAttacker.js](JavaScript/timedAttacker.js): Makes requests during specific time intervals. Use it like this, replacing `EXTERNAL_IP` with the frontend's external IP.
+  1. Update the `BASE_URL` variable to equal the URL of your webpage.
+  2. Update the `ATTACKS` variable.
+  3. Run the following in your terminal:
    ```bash
-    node timedAttacker.js [http://EXTERNAL_IP]
+    node timedAttacker.js
    ```
-2. [timedAttackerLimited.js](JavaScript/timedAttackerLimited.js): Basically the same as the timedAttacker, but this one limits the number of requests. Use it like this, replacing `EXTERNAL_IP` with the frontend's external IP.
+- [timedAttackerLimited.js](JavaScript/timedAttackerLimited.js): Basically the same as the timedAttacker, but this one limits the number of requests. Use it like this, replacing `EXTERNAL_IP` with the frontend's external IP.
+  1. Update the `BASE_URL` variable to equal the URL of your webpage.
+  2. Update the `ATTACKS` variable.
+  3. Run the following in your terminal:
    ```bash
-    node timedAttackerLimited.js [http://EXTERNAL_IP]
+    node timedAttackerLimited.js
    ```
 > **Tip:** Be sure to run this script on a computer that you don't use regularly, because you will need to keep it running during all your attacks.
 
@@ -87,14 +93,18 @@ I have provided two different implementations to retrieve data from this project
 
 #### DataExtractor (Python)
 
-1. Open the [DataExtractor (Python)](DataExtractors/Python-DataExtractor/) in your favorite IDE. 
-2. Use [`dotenv`](https://pypi.org/project/python-dotenv/) to set up the PROJECT_ID environment variable. To do so, execute the following command in a terminal, replacing REPLACE_ME with your project id (found on your [GCP Dashboard](https://console.cloud.google.com/home/dashboard?)):
+1. Install the [`google-cloud-monitoring`](https://pypi.org/project/google-cloud-monitoring/) python package:
+   ```bash
+   pip install google-cloud-monitoring
+   ```
+2. Open the [DataExtractor (Python)](DataExtractors/Python-DataExtractor/) in your favorite IDE.
+3. Use [`dotenv`](https://pypi.org/project/python-dotenv/) to set up the PROJECT_ID environment variable. To do so, execute the following command in a terminal, replacing `REPLACE_ME` with your project id (found on your [GCP Dashboard](https://console.cloud.google.com/home/dashboard?)):
    ```bash
    echo "PROJECT_ID=REPLACE_ME" > .env
    ```
-3. Update the `interval` variable according to the start and end time for the data you'd like to collect. These dates must be in the UTC timezone. 
-4. Modify the `attack_periods` variable in `main.py`. These dates must be in the UTC timezone. 
-5. Execute your program:
+4. Update the `interval` variable according to the start and end time for the data you'd like to collect. These dates must be in the UTC timezone. 
+5. Modify the `attack_periods` variable in `main.py`. These dates must be in the UTC timezone. 
+6. Execute your program:
    ```bash
    python main.py
    ```
