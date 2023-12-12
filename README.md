@@ -54,17 +54,17 @@ As a brief summary, you need to create your own Docker images (I recommend using
 ### 4. Simulating attack behavior
 
 In the [JavaScript](JavaScript/) directory, I've provided a few files:
-1. [immediateAttacker.js](JavaScript/immediateAttacker.js): Makes requests while running. Mainly used during development to see if you've got things working properly. Use it like this, replacing [http://EXTERNAL_IP] with the frontend's external IP.
+1. [immediateAttacker.js](JavaScript/immediateAttacker.js): Makes requests while running. Mainly used during development to see if you've got things working properly. Use it like this, replacing `EXTERNAL_IP` with the frontend's external IP.
    ```bash
     node immediateAttacker.js [http://EXTERNAL_IP]
    ```
-2. [timedAttacker.js](JavaScript/timedAttacker.js): Makes requests during specific time intervals. Use it like this, replacing [http://EXTERNAL_IP] with the frontend's external IP.
+2. [timedAttacker.js](JavaScript/timedAttacker.js): Makes requests during specific time intervals. Use it like this, replacing `EXTERNAL_IP` with the frontend's external IP.
    ```bash
     node timedAttacker.js [http://EXTERNAL_IP]
    ```
-2. [timedAttackerLimited.js](JavaScript/timedAttacker.js): Basically the same as the timedAttacker, but this one limits the number of requests. Use it like this, replacing [http://EXTERNAL_IP] with the frontend's external IP.
+2. [timedAttackerLimited.js](JavaScript/timedAttackerLimited.js): Basically the same as the timedAttacker, but this one limits the number of requests. Use it like this, replacing `EXTERNAL_IP` with the frontend's external IP.
    ```bash
-    node timedAttacker.js [http://EXTERNAL_IP]
+    node timedAttackerLimited.js [http://EXTERNAL_IP]
    ```
 > **Tip:** Be sure to run this script on a computer that you don't use regularly, because you will need to keep it running during all your attacks.
 
