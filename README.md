@@ -77,7 +77,7 @@ I have provided two different implementations to retrieve data from this project
    - Main class: Main.java
    - Program arguments: -Xmx2048m 
    - Environment variables: PROJECT_ID=REPLACE_ME
-     - Replace REPLACE_ME with your project id, which you can find [here](https://console.developers.google.com/)
+     - Replace REPLACE_ME with your project id, which you can find on your [GCP Dashboard](https://console.cloud.google.com/home/dashboard?).
 3. Update the `startDate` and `endDate` variables in `Main.java`. These dates must be in the UTC timezone. 
 4. Update the `attackPeriods` variable in `Main.java`. These dates must be in the UTC timezone.
 5. Run your Run/Debug configuration!
@@ -86,7 +86,7 @@ I have provided two different implementations to retrieve data from this project
 #### DataExtractor (Python)
 
 1. Open the [DataExtractor (Python)](DataExtractors/Python-DataExtractor/) in your favorite IDE. 
-2. Use [`dotenv`](https://pypi.org/project/python-dotenv/) to set up the PROJECT_ID environment variable. To do so, execute the following command in a terminal, replacing REPLACE_ME with your project id (found [here](https://console.developers.google.com/)):
+2. Use [`dotenv`](https://pypi.org/project/python-dotenv/) to set up the PROJECT_ID environment variable. To do so, execute the following command in a terminal, replacing REPLACE_ME with your project id (found on your [GCP Dashboard](https://console.cloud.google.com/home/dashboard?)):
    ```bash
    echo "PROJECT_ID=REPLACE_ME" > .env
    ```
