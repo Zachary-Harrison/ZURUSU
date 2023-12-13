@@ -102,7 +102,7 @@ async function main() {
           console.log(`Starting attack at ${moment().format('MM/DD/YYYY, h:mm A')}`);
         }
         const randNumGen = Math.floor(Math.random() * (maxWait - minWait)) + minWait
-        const waitTime = (2 / 10) * (atk.cost / normalExpectedCost) * randNumGen;  // 1.5 output of 10 users
+        const waitTime = (2 / 10) * (atk.cost / normalExpectedCost) * randNumGen;  // 1/2 output of 10 users
         const startTime = Date.now();
         await atk.task();
         const elapsedTime = Date.now() - startTime;
