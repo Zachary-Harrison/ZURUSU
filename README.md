@@ -43,15 +43,10 @@ git clone https://github.com/Zachary-Harrison/ZURUSU.git
 1. Follow the [Quickstart (GKE) instructions](https://github.com/GoogleCloudPlatform/microservices-demo/tree/main#quickstart-gke) provided by microservices-demo. 
    - Be sure to clone the microservices-demo in a folder that is not already a repository. 
 2. Create a service account [here](https://console.cloud.google.com/iam-admin/serviceaccounts/) for your project
-3. [Deploy Online Boutique variations with Kustomize](https://github.com/GoogleCloudPlatform/microservices-demo/tree/main/kustomize/components/google-cloud-operations)
+3. [Deploy Online Boutique variations with Kustomize](https://github.com/GoogleCloudPlatform/microservices-demo/tree/main/kustomize#deploy-online-boutique-with-kustomize)
+   > Note: This documents additional ways to modify app behavior, along with the [development guide](https://github.com/GoogleCloudPlatform/microservices-demo/blob/main/docs/development-guide.md).
 
-### 3. (Optional) Modify app behavior
-
-The creators of microservices-demo made an amazing [development guide](https://github.com/GoogleCloudPlatform/microservices-demo/blob/main/docs/development-guide.md) for how to run and develop their app locally. This is how you can change the behavior for `loadgenerator` or other microservices.
-
-As a brief summary, you need to create your own Docker images (I recommend using [IntelliJ](https://www.jetbrains.com/idea/download/?section=windows) to help streamline this process). Then you use `skaffold` and `kubectl` to modify the default configuration files to use your image repository instead of the static one provided.
-
-### 4. Simulating attack behavior
+### 3. Simulating attack behavior
 
 In the [JavaScript](JavaScript/) directory, I've provided a few files:
 - [immediateAttacker.js](JavaScript/immediateAttacker.js): Makes requests while running. Mainly used during development to see if you've got things working properly. Use it like this, replacing `EXTERNAL_IP` with the frontend's external IP.
@@ -74,7 +69,7 @@ In the [JavaScript](JavaScript/) directory, I've provided a few files:
    ```
 > **Tip:** Be sure to run this script on a computer that you don't use regularly, because you will need to keep it running during all your attacks.
 
-### 5. Retrieving Data
+### 4. Retrieving Data
 
 I have provided two different implementations to retrieve data from this project. The Java version is recommended, as Java more easily supports the reading and creation of large files. 
 
@@ -115,14 +110,13 @@ I have provided two different implementations to retrieve data from this project
 - Converting between [local time and UTC time](https://www.worldtimebuddy.com/).
 - What is [RFFC 3339 format](https://www.rfc-editor.org/rfc/rfc3339#:~:text=Abstract%20This%20document%20defines%20a,times%20using%20the%20Gregorian%20calendar.).
 
-### 6. (Optional) EDA
+### 5. (Optional) EDA
 
 If you want to see what your data looks like, use the [ATTACK_EDA.ipynb](ATTACK_EDA.ipynb) notebook that I've provided! You can use [Google Collab](https://colab.google/) or use Visual Studio Code (follow the instructions [here](https://code.visualstudio.com/docs/datascience/jupyter-notebooks)).
 
-### 7. Create Your Model
+### 6. Create Your Model
 
-Finally, you can create your model by running the [USAD.ipynb](USAD.ipynb) notebook, substituting your data for the default data. Be sure to modify the notebook so that it's reading your data from the correct spot.
-
+Finally, you can create your model by running the [USAD.ipynb](USAD.ipynb) notebook, substituting your data for the default data. You only need to modify the `Environment` section; leave everything else the same unless you change the structure for the CSV files. 
 
 ## Future Works
 
