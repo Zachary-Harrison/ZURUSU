@@ -24,11 +24,11 @@ const CURRENCIES = ['EUR', 'USD', 'JPY', 'GBP', 'TRY', 'CAD'];
 // these functions make HTTP requests
 // ==================================
 async function index() {
-  await axios.get(BASE_URL + '/');
+  await axios.get(`${BASE_URL}/`);
 }
 
 async function viewCart() {
-  await axios.get(BASE_URL + '/cart');
+  await axios.get(`${BASE_URL}/cart`);
 }
 
 async function browseProduct() {
