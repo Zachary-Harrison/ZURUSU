@@ -3,11 +3,15 @@ const moment = require('moment');
 const qs = require('qs');
 
 // retrieving BASE_URL from provided arguments
-const BASE_URL = process.argv[2];
-if (!BASE_URL) {
-  console.error('Please provide a BASE_URL as an argument');
-  process.exit(1);
-}
+const BASE_URL = "http://EXTERNAL_IP";
+const ATTACKS = [  // cost = # of services affected; freq = distribution of pages visited in normal behavior
+  { start: "2023-12-13T03:00:00Z", end: "2023-12-13T03:59:00Z", task: index,          cost: 5,  freq: 1 },
+  { start: "2023-12-13T06:00:00Z", end: "2023-12-13T06:59:00Z", task: viewCart,       cost: 6,  freq: 3 },
+  { start: "2023-12-13T09:00:00Z", end: "2023-12-13T09:59:00Z", task: setCurrency,    cost: 5,  freq: 2 },
+  { start: "2023-12-13T12:00:00Z", end: "2023-12-13T12:59:00Z", task: browseProduct,  cost: 6,  freq: 10 },
+  { start: "2023-12-13T15:00:00Z", end: "2023-12-13T15:59:00Z", task: addToCart,      cost: 6,  freq: 2 },
+  { start: "2023-12-13T18:00:00Z", end: "2023-12-13T18:59:00Z", task: checkout,       cost: 10, freq: 1 },
+];
 
 const PRODUCTS = [
   '0PUK6V6EV0','1YMWWN1N4O','2ZYFJ3GM2N','66VCHSJNUP',
@@ -15,15 +19,6 @@ const PRODUCTS = [
 ];
 const QUANTITIES = [1, 2, 3, 4, 5, 10];
 const CURRENCIES = ['EUR', 'USD', 'JPY', 'GBP', 'TRY', 'CAD'];
-const ATTACKS = [  // cost = # of services affected; freq = distribution of pages visited in normal behavior
-  { start: "2023-12-10T03:00:00Z", end: "2023-12-10T03:59:00Z", task: index,          cost: 5,  freq: 1 },
-  { start: "2023-12-10T06:00:00Z", end: "2023-12-10T06:59:00Z", task: viewCart,       cost: 6,  freq: 2 },
-  { start: "2023-12-10T09:00:00Z", end: "2023-12-10T09:59:00Z", task: setCurrency,    cost: 5,  freq: 10},
-  { start: "2023-12-10T12:00:00Z", end: "2023-12-10T12:59:00Z", task: browseProduct,  cost: 6,  freq: 2 },
-  { start: "2023-12-10T15:00:00Z", end: "2023-12-10T15:59:00Z", task: addToCart,      cost: 6,  freq: 3 },
-  { start: "2023-12-10T18:00:00Z", end: "2023-12-10T18:59:00Z", task: checkout,       cost: 10, freq: 1 },
-];
-
 
 // ==================================
 // these functions make HTTP requests

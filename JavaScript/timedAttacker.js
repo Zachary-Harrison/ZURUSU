@@ -3,11 +3,15 @@ const moment = require('moment');
 const qs = require('qs');
 
 // retrieving BASE_URL from provided arguments
-const BASE_URL = process.argv[2];
-if (!BASE_URL) {
-  console.error('Please provide a BASE_URL as an argument');
-  process.exit(1);
-}
+const BASE_URL = "http://EXTERNAL_IP";
+const ATTACKS = [
+  { start: "2023-11-12T03:00:00Z", end: "2023-11-12T03:59:00Z", task: index },
+  { start: "2023-11-12T06:00:00Z", end: "2023-11-12T06:59:00Z", task: viewCart },
+  { start: "2023-11-12T09:00:00Z", end: "2023-11-12T09:59:00Z", task: setCurrency },
+  { start: "2023-11-12T12:00:00Z", end: "2023-11-12T12:59:00Z", task: browseProduct },
+  { start: "2023-11-12T15:00:00Z", end: "2023-11-12T15:59:00Z", task: addToCart },
+  { start: "2023-11-12T18:00:00Z", end: "2023-11-12T18:59:00Z", task: checkout },
+];
 
 const PRODUCTS = [
   '0PUK6V6EV0','1YMWWN1N4O','2ZYFJ3GM2N','66VCHSJNUP',
@@ -15,15 +19,6 @@ const PRODUCTS = [
 ];
 const QUANTITIES = [1, 2, 3, 4, 5, 10];
 const CURRENCIES = ['EUR', 'USD', 'JPY', 'GBP', 'TRY', 'CAD'];
-const ATTACKS = [ 
-  // Example:
-  // { start: "2023-11-12T03:00:00Z", end: "2023-11-12T03:59:00Z", task: index },
-  // { start: "2023-11-12T06:00:00Z", end: "2023-11-12T06:59:00Z", task: viewCart },
-  // { start: "2023-11-12T09:00:00Z", end: "2023-11-12T09:59:00Z", task: setCurrency },
-  // { start: "2023-11-12T12:00:00Z", end: "2023-11-12T12:59:00Z", task: browseProduct },
-  // { start: "2023-11-12T15:00:00Z", end: "2023-11-12T15:59:00Z", task: addToCart },
-  // { start: "2023-11-12T18:00:00Z", end: "2023-11-12T18:59:00Z", task: checkout },
-];
 
 // ==================================
 // these functions make HTTP requests
