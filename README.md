@@ -122,11 +122,12 @@ Finally, you can create your model by running the [USAD.ipynb](USAD.ipynb) noteb
 
 ## Future Works
 
-While this is only a POC model, it shows some real potential for using Machine Learning in preventing hackers from attacking various components of microservices! 
+While this is only a POC model, it shows some real potential for using Machine Learning in preventing hackers from attacking various components of microservices! Here are some potential ideas to expand on this work:
 - **Idea 1**: Document the project on GitHub so that anyone can reproduce the same results.
-- **Idea 2**: Re-produce these results using the other models that Xiao provided.
+- **Idea 2**: Re-produce these results using the other models.
 - **Idea 3**: Make more realistic, covert attacks.
 - **Idea 4**: Implement a real-time defense strategy using our model.
+- **Idea 5**: Make a more generalizable normal dataset (this is related to the need for two different Normal datasets in Model 1 vs Model 2).
 
 ## Citations
 
