@@ -22,7 +22,7 @@ In this model, I limit the overall CPU usage during attacks to 1.5x the usage du
 |                  ![LearningCurve_1.png](images/LearningCurve_2.png)                  |     |            ![ROC_1.png](images/ROC_2.png)            |
 
 
-> **Note**: Model version 2 uses a different Normal dataset than Model version 1. I'm not sure if this is due to changes in the [microservices-demo](https://github.com/GoogleCloudPlatform/microservices-demo) codebase, or if GKE clusters have unique server behavior. 
+> **Note**: Model version 2 uses a different Normal dataset than Model version 1. I'm not sure if this is necessary due to changes in the [microservices-demo](https://github.com/GoogleCloudPlatform/microservices-demo) codebase, or if GKE clusters have unique server behavior. 
 
 ## Jupyter Notebooks
 
