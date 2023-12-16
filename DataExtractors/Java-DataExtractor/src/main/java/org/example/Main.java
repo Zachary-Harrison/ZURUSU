@@ -13,15 +13,15 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) throws IOException, ParseException {
         SimpleDateFormat rfc3339Formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-        Date startDate = rfc3339Formatter.parse("2023-12-13T01:00:00Z");
-        Date endDate = rfc3339Formatter.parse("2023-12-13T21:00:00Z");
+        Date startDate = rfc3339Formatter.parse("2023-10-07T17:00:00Z");
+        Date endDate = rfc3339Formatter.parse("2023-10-13T19:00:00Z");
         List<String[]> attackPeriods = Arrays.asList(
-                new String[]{"2023-12-13T03:00:00Z", "2023-12-13T03:59:00Z"},
-                new String[]{"2023-12-13T06:00:00Z", "2023-12-13T06:59:00Z"},
-                new String[]{"2023-12-13T09:00:00Z", "2023-12-13T09:59:00Z"},
-                new String[]{"2023-12-13T12:00:00Z", "2023-12-13T12:59:00Z"},
-                new String[]{"2023-12-13T15:00:00Z", "2023-12-13T15:59:00Z"},
-                new String[]{"2023-12-13T18:00:00Z", "2023-12-13T18:59:00Z"}
+                new String[]{"2023-12-10T03:00:00Z", "2023-12-10T03:59:00Z"},
+                new String[]{"2023-12-10T06:00:00Z", "2023-12-10T06:59:00Z"},
+                new String[]{"2023-12-10T09:00:00Z", "2023-12-10T09:59:00Z"},
+                new String[]{"2023-12-10T12:00:00Z", "2023-12-10T12:59:00Z"},
+                new String[]{"2023-12-10T15:00:00Z", "2023-12-10T15:59:00Z"},
+                new String[]{"2023-12-10T18:00:00Z", "2023-12-10T18:59:00Z"}
         );
 
         TimeInterval interval =
@@ -51,7 +51,7 @@ public class Main {
             extractor.createFiles(interval, aggregation, filter);
             extractor.mergeFiles();
 //            extractor.convertToCSV("CPU_Usage-NORMAL.csv");
-            extractor.convertToCSV("CPU_Usage-OVERALL_ATTACK.csv", attackPeriods);
+            extractor.convertToCSV("CPU_Usage-OVERALL_ATTACKv2.csv", attackPeriods);
         }
         catch (Exception e) {
             System.err.println(e.toString());

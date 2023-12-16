@@ -2,15 +2,14 @@ const axios = require('axios');
 const moment = require('moment');
 const qs = require('qs');
 
-// retrieving BASE_URL from provided arguments
 const BASE_URL = "http://EXTERNAL_IP";
 const ATTACKS = [
-  { start: "2023-11-12T03:00:00Z", end: "2023-11-12T03:59:00Z", task: index },
-  { start: "2023-11-12T06:00:00Z", end: "2023-11-12T06:59:00Z", task: viewCart },
-  { start: "2023-11-12T09:00:00Z", end: "2023-11-12T09:59:00Z", task: setCurrency },
-  { start: "2023-11-12T12:00:00Z", end: "2023-11-12T12:59:00Z", task: browseProduct },
-  { start: "2023-11-12T15:00:00Z", end: "2023-11-12T15:59:00Z", task: addToCart },
-  { start: "2023-11-12T18:00:00Z", end: "2023-11-12T18:59:00Z", task: checkout },
+  { start: "2023-11-12T03:00:00Z", end: "2023-11-12T03:59:00Z", isActive: false, task: index },
+  { start: "2023-11-12T06:00:00Z", end: "2023-11-12T06:59:00Z", isActive: false, task: viewCart },
+  { start: "2023-11-12T09:00:00Z", end: "2023-11-12T09:59:00Z", isActive: false, task: setCurrency },
+  { start: "2023-11-12T12:00:00Z", end: "2023-11-12T12:59:00Z", isActive: false, task: browseProduct },
+  { start: "2023-11-12T15:00:00Z", end: "2023-11-12T15:59:00Z", isActive: false, task: addToCart },
+  { start: "2023-11-12T18:00:00Z", end: "2023-11-12T18:59:00Z", isActive: false, task: checkout },
 ];
 
 const PRODUCTS = [
@@ -31,15 +30,15 @@ async function viewCart() {
   await axios.get(`${BASE_URL}/cart`);
 }
 
-async function browseProduct() {
-  const product = PRODUCTS[Math.floor(Math.random() * PRODUCTS.length)];
-  await axios.get(`${BASE_URL}/product/${product}`);
-}
-
 async function setCurrency() {
   await axios.post(`${BASE_URL}/setCurrency`, qs.stringify({
     'currency_code': CURRENCIES[Math.floor(Math.random() * CURRENCIES.length)],
   }));
+}
+
+async function browseProduct() {
+  const product = PRODUCTS[Math.floor(Math.random() * PRODUCTS.length)];
+  await axios.get(`${BASE_URL}/product/${product}`);
 }
 
 async function addToCart() {
@@ -73,10 +72,6 @@ function timeIsBetween(start, end) {
 }
 
 async function main() {
-  for (const atk of ATTACKS) {
-    atk.isActive = false;
-  }
-
   while (true) {
     for (const atk of ATTACKS) {
       if (timeIsBetween(atk.start, atk.end)) {
@@ -84,7 +79,11 @@ async function main() {
           atk.isActive = true;
           console.log(`Starting attack at ${moment().format('MM/DD/YYYY, h:mm A')}`);
         }
-        await atk.task();
+        try {
+          await atk.task();
+        } catch ({name, message}){
+          console.log(`\tEncountered ${name}`);
+        }
       } else if (atk.isActive) {
         atk.isActive = false;
         console.log(`Ending attack at ${moment().format('MM/DD/YYYY, h:mm A')}`);

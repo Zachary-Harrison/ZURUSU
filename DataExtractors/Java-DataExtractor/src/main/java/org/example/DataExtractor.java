@@ -41,7 +41,7 @@ public class DataExtractor {
     }
 
     public void createFiles(TimeInterval interval, Aggregation aggregation, String filter, int i, String pageToken) throws IOException, ApiException {
-        System.out.println("creating files...");
+        System.out.printf("%-30s", "Creating page json files... ");
         MetricServiceClient client = MetricServiceClient.create();
         Path inputDirPath = Paths.get(this.inputDirectory);
         Files.createDirectories(inputDirPath);  // create the directory if it does not exist
@@ -71,16 +71,16 @@ public class DataExtractor {
             }else {
                 System.out.println("\tpageToken(" + i + ") = " + pageToken);
             }
-
         }
         client.close();
+        System.out.printf("%s\n", "Done.");
     }
     public void createFiles(TimeInterval interval, Aggregation aggregation, String filter) throws IOException, ApiException {
         createFiles(interval, aggregation, filter, 0, "");
     }
 
     public void mergeFiles() throws IOException {
-        System.out.println("merging files...");
+        System.out.printf("%-30s", "Merging page json files... ");
         Gson gson = new Gson();
 
         try (Writer writer = Files.newBufferedWriter(Paths.get(this.inputDirectory, MERGED_FILENAME))) {
@@ -103,9 +103,9 @@ public class DataExtractor {
                     }
                 }
             }
-
             writer.write("]");  // End of JSON array
         }
+        System.out.printf("%s\n", "Done.");
     }
 
     private String getField(String rawField) {
@@ -133,7 +133,7 @@ public class DataExtractor {
     }
 
     public void convertToCSV(String outputFileName, List<String[]> attackPeriods) throws IOException {
-        System.out.println("converting files...");
+        System.out.printf("%-30s", "Converting to CSV file... ");
         if (!outputFileName.endsWith(".csv")) {
             outputFileName += ".csv";
         }
@@ -204,6 +204,7 @@ public class DataExtractor {
                 printer.printRecord(record);
             }
         }
+        System.out.printf("%s\n", "Done.");
     }
 
     public void convertToCSV(String outputFileName) throws IOException {

@@ -2,9 +2,9 @@
 
 ## Results
 
-In this project, I built two different Proof-Of-Concept (POC) models capable of classifying microservice server attacks with over 99% accuracy.
+In this project, I built two different Proof-Of-Concept (POC) models, both with ROC AUC scores greater than 0.99. 
 
-See [dataLog.md](dataLog.md) for more information regarding when the datasets were created.
+See [dataLog.md](dataLog.md) for more information regarding when the datasets were created and when different services were affected.
 
 ### Model version 1: Unlimited Requests
 
@@ -21,6 +21,8 @@ In this model, I limit the overall CPU usage during attacks to 1.5x the usage du
 | :----------------------------------------------------------------------------------: | :-: | :--------------------------------------------------: |
 |                  ![LearningCurve_1.png](images/LearningCurve_2.png)                  |     |            ![ROC_1.png](images/ROC_2.png)            |
 
+
+> **Note**: Model version 2 uses a different Normal dataset than Model version 1. I'm not sure if this is due to changes in the [microservices-demo](https://github.com/GoogleCloudPlatform/microservices-demo) codebase, or if GKE clusters have unique server behavior. 
 
 ## Jupyter Notebooks
 

@@ -2,15 +2,14 @@ const axios = require('axios');
 const moment = require('moment');
 const qs = require('qs');
 
-// retrieving BASE_URL from provided arguments
 const BASE_URL = "http://EXTERNAL_IP";
 const ATTACKS = [  // cost = # of services affected; freq = distribution of pages visited in normal behavior
-  { start: "2023-12-13T03:00:00Z", end: "2023-12-13T03:59:00Z", task: index,          cost: 5,  freq: 1 },
-  { start: "2023-12-13T06:00:00Z", end: "2023-12-13T06:59:00Z", task: viewCart,       cost: 6,  freq: 3 },
-  { start: "2023-12-13T09:00:00Z", end: "2023-12-13T09:59:00Z", task: setCurrency,    cost: 5,  freq: 2 },
-  { start: "2023-12-13T12:00:00Z", end: "2023-12-13T12:59:00Z", task: browseProduct,  cost: 6,  freq: 10 },
-  { start: "2023-12-13T15:00:00Z", end: "2023-12-13T15:59:00Z", task: addToCart,      cost: 6,  freq: 2 },
-  { start: "2023-12-13T18:00:00Z", end: "2023-12-13T18:59:00Z", task: checkout,       cost: 10, freq: 1 },
+  { start: "2023-12-14T03:00:00Z", end: "2023-12-14T03:59:00Z", isActive: false, task: index,          cost: 5,  freq: 1 },
+  { start: "2023-12-14T06:00:00Z", end: "2023-12-14T06:59:00Z", isActive: false, task: viewCart,       cost: 6,  freq: 3 },
+  { start: "2023-12-14T09:00:00Z", end: "2023-12-14T09:59:00Z", isActive: false, task: setCurrency,    cost: 5,  freq: 2 },
+  { start: "2023-12-14T12:00:00Z", end: "2023-12-14T12:59:00Z", isActive: false, task: browseProduct,  cost: 6,  freq: 10 },
+  { start: "2023-12-14T15:00:00Z", end: "2023-12-14T15:59:00Z", isActive: false, task: addToCart,      cost: 6,  freq: 2 },
+  { start: "2023-12-14T18:00:00Z", end: "2023-12-14T18:59:00Z", isActive: false, task: checkout,       cost: 10, freq: 1 },
 ];
 
 const PRODUCTS = [
@@ -31,15 +30,15 @@ async function viewCart() {
   await axios.get(`${BASE_URL}/cart`);
 }
 
-async function browseProduct() {
-  const product = PRODUCTS[Math.floor(Math.random() * PRODUCTS.length)];
-  await axios.get(`${BASE_URL}/product/${product}`);
-}
-
 async function setCurrency() {
   await axios.post(`${BASE_URL}/setCurrency`, qs.stringify({
     'currency_code': CURRENCIES[Math.floor(Math.random() * CURRENCIES.length)],
   }));
+}
+
+async function browseProduct() {
+  const product = PRODUCTS[Math.floor(Math.random() * PRODUCTS.length)];
+  await axios.get(`${BASE_URL}/product/${product}`);
 }
 
 async function addToCart() {
@@ -73,10 +72,6 @@ function timeIsBetween(start, end) {
 }
 
 async function main() {
-  for (const atk of ATTACKS) {
-    atk.isActive = false;
-  }
-
   // normalizing freq (total = 1)
   freqTotal = 0;
   for (let i = 0; i < ATTACKS.length; i++) {
@@ -94,6 +89,8 @@ async function main() {
   
   minWait = 1_000;
   maxWait = 10_000;
+  
+  // REQUEST LOOP
   while (true) {
     for (const atk of ATTACKS) {
       if (timeIsBetween(atk.start, atk.end)) {
@@ -104,7 +101,11 @@ async function main() {
         const randNumGen = Math.floor(Math.random() * (maxWait - minWait)) + minWait
         const waitTime = (2 / 10) * (atk.cost / normalExpectedCost) * randNumGen;  // 1/2 output of 10 users
         const startTime = Date.now();
-        await atk.task();
+        try {
+          await atk.task();
+        } catch ({name, message}){
+          console.log(`\tEncountered ${name}`);
+        }
         const elapsedTime = Date.now() - startTime;
         if (elapsedTime < waitTime) {
           await new Promise(resolve => setTimeout(resolve, waitTime - elapsedTime));

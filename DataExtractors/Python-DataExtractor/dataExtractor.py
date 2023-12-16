@@ -11,10 +11,18 @@ class DataExtractor:
         self.PROJECT_ID = project_id
         self.inputDirectory = inputDirectory
         self.outputDirectory = outputDirectory
-        self.fieldnames = ["timestamp", "adservice","cartservice","checkoutservice","currencyservice","emailservice","frontend","paymentservice","productcatalogservice","recommendationservice","shippingservice", "label"]
-        # self.PROJECT_ID = "[PROJECT_ID]"
+        self.fieldnames = ["timestamp", "adservice","cartservice","checkoutservice","currencyservice",
+                           "emailservice","frontend","paymentservice","productcatalogservice",
+                           "recommendationservice","shippingservice", "label"]
+
+        # Create the input and output directories if they don't exist
+        if not os.path.exists(self.inputDirectory):
+            os.makedirs(self.inputDirectory)
+        if not os.path.exists(self.outputDirectory):
+            os.makedirs(self.outputDirectory)
 
     def createFiles(self, interval, aggregation, filter="", i=1, page_token=""):
+        print("{:<40}".format("Creating page json files... "), end="", flush=True)
         client = monitoring_v3.MetricServiceClient()
         # Keep calling API until we read all the pages
         while i < maxsize:
@@ -38,9 +46,10 @@ class DataExtractor:
             if not page_token:
                 break
             i += 1
-        print("Done creating page json files")
+        print("Done.")
                 
     def mergeFiles(self):
+        print("{:<40}".format("Merging page json files... "), end="", flush=True)
         output_list = []
         obj = os.scandir(self.inputDirectory)
         for entry in obj:
@@ -56,31 +65,7 @@ class DataExtractor:
         textfile_merged = open(f'{self.inputDirectory}/mergedResponse.json', 'w')
         json.dump({ "timeSeries": all_time_series }, textfile_merged, indent=2)
         textfile_merged.close()
-        print("Done merging page json files")
-
-    def createMergedFile(self, interval, aggregation, filter=""):
-        client = monitoring_v3.MetricServiceClient()
-        page_token = ""
-        # Keep calling API until we read all the pages
-        i = 0
-        while i < maxsize:
-            results = client.list_time_series(
-                request={
-                    "name": f"projects/{self.PROJECT_ID}",
-                    "filter": filter,
-                    "interval": interval,
-                    "view": monitoring_v3.ListTimeSeriesRequest.TimeSeriesView.FULL,
-                    "aggregation": aggregation,
-                    # "page_size": 25_000,
-                    "page_token": page_token,
-                },
-                timeout=300
-            )
-            response = json.loads(monitoring_v3.ListTimeSeriesResponse.to_json(results._response))
-            page_token = results._response.next_page_token
-            if not page_token:
-                break
-            i += 1
+        print("Done.")
 
     def _getField(self, rawField):
         field = ""
@@ -100,6 +85,7 @@ class DataExtractor:
         return 0
 
     def convertToCSV(self, outputFileName="output.csv", attackPeriods=None):
+        print("{:<40}".format("Converting to CSV file... "), end="", flush=True)
         if not outputFileName.endswith(".csv"):
             outputFileName += ".csv"
 
@@ -132,4 +118,5 @@ class DataExtractor:
         df[self.fieldnames[-1]] = df.index
         df[self.fieldnames[-1]] = df[self.fieldnames[-1]].apply(lambda x: self._getLabel(attackPeriods, x))
         df.to_csv(f"{self.outputDirectory}/{outputFileName}", index_label=self.fieldnames[0])
+        print("Done.")
         
